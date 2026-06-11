@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#FFFAEF">
+  <title>시급 2배 챌린지 - 영수증 쿠폰 출력 안내</title>
+
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+
+  <style>
+    :root {
+      --bg:          #FFF7E6;
+      --bg-soft:     #FFFAEF;
+
+      --card:        #FFFFFF;
+      --outer-card:  #FFF5D8;
+
+      --line-soft:   #F0E8D6;
+
+      --text-900:    #2A2A2A;
+      --text-700:    #4F4F4F;
+      --text-500:    #888888;
+      --text-400:    #B5B5B5;
+
+      --accent:        #FF6B00;
+      --accent-light:  #FF8A3C;
+      --accent-soft:   #FFE9D6;
+      --accent-faded:  #FFF1E5;
+
+      --yellow:        #FFB800;
+      --yellow-soft:   #FFE9A8;
+
+      --tag-bg:        #EFEFEF;
+      --tag-text:      #6E6E6E;
+      --tag-orange-bg: #FFE9D6;
+      --tag-orange:    #FF6B00;
+
+      --num-bg:        #2A2A2A;
+      --num-text:      #FFFFFF;
+
+      --r-card:    20px;
+      --r-outer:   24px;
+      --r-inner:   16px;
+      --r-tag:     6px;
+      --r-btn:     14px;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      color: var(--text-900);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.025em;
+      background: #FFECB3;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 420px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #FFECB3;
+      padding: 0 0 60px;
+      position: relative;
+    }
+
+    /* ============ 상단 흰색 영역 (헤더+히어로 텍스트+일러스트) ============ */
+    .top-white {
+      background: #FFFFFF;
+      padding-bottom: 0;
+      position: relative;
+    }
+    .top-white::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 140px;
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,236,179,0.5) 50%, #FFECB3 100%);
+      pointer-events: none;
+    }
+
+    /* ============ 상단 네비 ============ */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 20px;
+      position: relative;
+      min-height: 52px;
+    }
+    .topbar .back {
+      position: absolute;
+      left: 16px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+    .topbar .back svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--text-900);
+      stroke-width: 2.2;
+      fill: none;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-900);
+    }
+
+    /* ============ 히어로 ============ */
+    .hero-head {
+      padding: 16px 24px 20px;
+    }
+    .hero-title {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.4;
+      letter-spacing: -0.035em;
+      color: var(--text-900);
+    }
+    .hero-title .accent { color: var(--accent); font-weight: 800; }
+
+    /* ============ 히어로 일러스트 ============ */
+    .hero-illust {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 24px 28px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-illust svg {
+      width: 240px;
+      height: 220px;
+      filter: drop-shadow(0 16px 30px rgba(196, 110, 30, 0.22));
+      animation: float 3.6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* ============ 컨테이너 ============ */
+    .content {
+      padding: 0 18px;
+    }
+
+    /* ============ 카드 공통 ============ */
+    .card {
+      background: var(--card);
+      border-radius: var(--r-card);
+      padding: 26px 24px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+    }
+    .card-title {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.025em;
+    }
+    .card-sub {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-500);
+      font-weight: 400;
+      line-height: 1.55;
+    }
+
+    /* ============ 부재 알바 안내 카드 (펼치기 형식) ============ */
+    .notice-card {
+      background: var(--card);
+      border-radius: var(--r-card);
+      padding: 0;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+    }
+    details.notice-card[open] {
+      /* 열렸을 때 살짝 강조 */
+    }
+    .notice-card summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 22px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      user-select: none;
+    }
+    .notice-card summary::-webkit-details-marker { display: none; }
+    .notice-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: #FFF1E5;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .notice-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+    .notice-title-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+    .notice-title {
+      margin: 0 0 2px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+    }
+    .notice-subtitle {
+      margin: 0;
+      font-size: 12.5px;
+      color: var(--text-500);
+      font-weight: 500;
+    }
+    .notice-card summary::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid var(--text-400);
+      border-bottom: 2px solid var(--text-400);
+      transform: rotate(45deg);
+      transition: transform 0.2s;
+      margin-top: -3px;
+      flex-shrink: 0;
+    }
+    .notice-card[open] summary::after {
+      transform: rotate(-135deg);
+      margin-top: 2px;
+    }
+    .notice-body {
+      padding: 0 22px 22px;
+      font-size: 13.5px;
+      color: var(--text-700);
+      line-height: 1.65;
+    }
+    /* 헤드 영역 (시안의 안내 카피) */
+    .notice-body .notice-head {
+      margin-bottom: 18px;
+    }
+    .notice-body .notice-head-title {
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.025em;
+      line-height: 1.4;
+    }
+    .notice-body .notice-head-sub {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-500);
+      line-height: 1.6;
+    }
+    /* 케이스 박스 */
+    .notice-body .case-block {
+      margin-bottom: 14px;
+      padding: 18px 18px 16px;
+      border: 1px solid #E5E5E5;
+      border-radius: 14px;
+      background: #FFFFFF;
+    }
+    .notice-body .case-block:last-of-type {
+      margin-bottom: 14px;
+    }
+    .notice-body .case-tag {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: var(--text-500);
+      background: #F2F2F2;
+      padding: 5px 11px;
+      border-radius: 7px;
+      margin-bottom: 14px;
+    }
+    .notice-body .case-tag.accent {
+      color: var(--accent);
+      background: var(--accent-faded);
+    }
+    .notice-body .case-title {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-900);
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+    }
+    .notice-body .case-desc {
+      margin: 0 0 16px;
+      font-size: 13px;
+      color: var(--text-700);
+      line-height: 1.65;
+    }
+    .notice-body strong {
+      color: var(--text-900);
+      font-weight: 700;
+    }
+    .notice-body .highlight {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    /* 케이스 박스 안 액션 버튼 */
+    .case-btn {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.1s, background 0.15s;
+    }
+    .case-btn:active {
+      transform: scale(0.98);
+    }
+    .case-btn.primary {
+      background: var(--accent);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.20);
+    }
+    .case-btn.primary:hover {
+      background: #FF7B1A;
+    }
+    .case-btn.secondary {
+      background: #F5F5F5;
+      color: var(--text-900);
+      border: 1px solid #E5E5E5;
+    }
+    .case-btn.secondary:hover {
+      background: #EFEFEF;
+    }
+    /* 체크리스트 */
+    .notice-body .check-list {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      background: #FFFAEF;
+      border-radius: 10px;
+      list-style: none;
+    }
+    .notice-body .check-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 5px;
+      font-size: 12.5px;
+      color: var(--text-700);
+      line-height: 1.55;
+    }
+    .notice-body .check-list li:last-child { margin-bottom: 0; }
+    .notice-body .check-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    /* ============ (구) 부재 안내 카드 - 액션 버튼 (현재 미사용, 호환 유지) ============ */
+    .notice-actions {
+      display: none;
+    }
+
+    /* ============ 토스트 (잠깐 떴다 사라지는 안내) ============ */
+    .toast-container {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+      width: calc(100% - 32px);
+      max-width: 360px;
+    }
+    .toast {
+      background: #2A2A2A;
+      color: #FFFFFF;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: auto;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .toast .toast-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #FFD84D;
+    }
+    .toast .toast-title::before {
+      content: '✓';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+
+    /* ============ 보상 카드 (시급 안내) ============ */
+    .reward-card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-900);
+      padding-right: 60px;
+    }
+    .reward-card .sub {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: var(--text-500);
+      padding-right: 60px;
+    }
+    .reward-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .reward-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .reward-row:first-of-type {
+      padding-top: 4px;
+    }
+    .reward-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--num-bg);
+      color: var(--num-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .reward-text {
+      flex: 1;
+      font-size: 15.5px;
+      color: var(--text-900);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .reward-text .strong {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    /* ============ 절차 묶음 카드 (흰색으로 변경) ============ */
+    .outer-card {
+      background: var(--card);
+      border-radius: var(--r-card);
+      padding: 28px 24px 24px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+    }
+    .outer-card-head {
+      padding: 0 0 8px;
+      margin-bottom: 4px;
+    }
+    .outer-card-title {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.025em;
+    }
+    .outer-card-sub {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--text-500);
+    }
+
+    /* 내부 단계 — 하나의 흰색 카드 안의 섹션 */
+    .inner-card {
+      background: transparent;
+      border-top: 1px solid var(--line-soft);
+      padding: 20px 0 20px;
+      margin-bottom: 0;
+    }
+    .inner-card:last-child { padding-bottom: 4px; }
+
+    /* 단계 본문 영역: 좌측 컨텐츠 + 우측 아이콘 */
+    .step-body {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .step-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* 태그 */
+    .inner-tag {
+      display: inline-block;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 6px;
+      margin: 0 0 12px;
+    }
+    .inner-tag.solved {
+      background: var(--tag-orange-bg);
+      color: var(--tag-orange);
+    }
+
+    /* 우측 미니 아이콘 */
+    .step-mini-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--accent-faded);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-mini-icon svg {
+      width: 38px;
+      height: 38px;
+    }
+
+    /* 번호 + 제목 */
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--num-bg);
+      color: var(--num-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .step-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+    }
+
+    /* 본문 설명 */
+    .step-desc {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-700);
+      line-height: 1.6;
+    }
+    .step-desc strong {
+      color: var(--text-900);
+      font-weight: 700;
+    }
+
+    /* ============ 참여 코드 박스 ============ */
+    .code-callout {
+      margin: 14px 0 0;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .code-callout .code-label {
+      font-size: 12px;
+      color: var(--text-500);
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    .code-callout .code-val {
+      font-family: 'SF Mono', ui-monospace, 'Cascadia Mono', 'Roboto Mono', monospace;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: 0.04em;
+      margin: 0;
+      line-height: 1.1;
+    }
+    .code-callout .arrow-icon {
+      flex-shrink: 0;
+      font-size: 22px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ============ 꿀팁 박스 ============ */
+    .tip-box {
+      margin: 14px 0 0;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
+      border-radius: 14px;
+    }
+    .tip-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .tip-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+    .tip-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+    }
+    .tip-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .tip-list li {
+      display: flex;
+      gap: 7px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-700);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .tip-list li:last-child {
+      margin-bottom: 0;
+    }
+    .tip-list .tip-num {
+      flex-shrink: 0;
+      font-weight: 700;
+      color: var(--text-900);
+    }
+    .tip-secret {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--text-700);
+      letter-spacing: -0.02em;
+    }
+    .tip-secret-link {
+      display: block;
+      margin-top: 4px;
+      font-size: 11.5px;
+      color: var(--text-500);
+    }
+
+    /* ============ 2번 버전: 인터뷰 / 3번 버전: 랭킹 공통 ============ */
+
+    /* 헤더 라벨 (2/3번용 - 큰 헤더 위 작은 라벨) */
+    .hero-label {
+      display: inline-block;
+      padding: 5px 12px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 700;
+      border-radius: 100px;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    /* 2번/3번 본문 배경 그라데이션 */
+    #content-version-2,
+    #content-version-3 {
+      background: linear-gradient(180deg, #FFF8E0 0%, #FFFAF2 40%, var(--bg-yellow) 100%);
+      margin: 0 -16px;
+      padding: 4px 16px 0;
+      border-radius: 0;
+    }
+    /* 스토리 헤더 카드 */
+    .story-card {
+      padding: 24px 22px 22px;
+      background: var(--card);
+      border-radius: var(--r-card);
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+    }
+    .story-label {
+      display: inline-block;
+      padding: 5px 12px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 700;
+      border-radius: 100px;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .story-headline {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.35;
+      letter-spacing: -0.03em;
+      color: var(--text-900);
+      margin: 0;
+    }
+    .story-headline .accent {
+      color: var(--accent);
+    }
+    .story-amount {
+      color: var(--accent);
+      font-weight: 900;
+      font-size: 28px;
+    }
+
+    /* 프로필 카드 (2번) */
+    .profile-card {
+      padding: 22px 22px;
+      background: var(--card);
+      border-radius: var(--r-card);
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      grid-template-rows: auto auto;
+      gap: 14px;
+      align-items: center;
+    }
+    .profile-avatar {
+      grid-row: 1;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #FFE5B4;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
+    }
+    .profile-avatar-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #FFE5B4 0%, #FFC988 100%);
+      font-size: 30px;
+      position: absolute;
+      inset: 0;
+    }
+    .profile-info {
+      grid-row: 1;
+    }
+    .profile-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .profile-meta {
+      font-size: 12.5px;
+      color: var(--text-500);
+      line-height: 1.5;
+    }
+    .profile-amount {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .profile-amount-label {
+      font-size: 13px;
+      color: var(--text-700);
+      font-weight: 600;
+    }
+    .profile-amount-value {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    /* Q&A 카드 (2번/3번 공통) - 인터뷰 디자인 강화 */
+    .qa-card {
+      padding: 24px 22px 22px;
+      background: var(--card);
+      border-radius: var(--r-card);
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+      position: relative;
+    }
+    .qa-q {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed #EEEAE4;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .qa-q::before {
+      content: 'P';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .qa-q-text { flex: 1; }
+    .qa-a {
+      font-size: 14.5px;
+      color: var(--text-700);
+      line-height: 1.7;
+      letter-spacing: -0.02em;
+      word-break: keep-all;
+      position: relative;
+      padding-left: 38px;
+      min-height: 28px;
+    }
+    .qa-a::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #FFE5B4 url("images/profile.png") center/cover no-repeat;
+      flex-shrink: 0;
+    }
+
+    /* 인터뷰 강조 표시 */
+    .qa-a .hl,
+    .qa-a-text .hl {
+      background: linear-gradient(180deg, transparent 60%, #FFF1B8 60%);
+      padding: 0 2px;
+      font-weight: 600;
+      color: var(--text-900);
+    }
+    .qa-a .pt,
+    .qa-a-text .pt {
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .qa-a .bd,
+    .qa-a-text .bd {
+      font-weight: 800;
+      color: var(--text-900);
+    }
+    .qa-a .ul,
+    .qa-a-text .ul {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+      font-weight: 700;
+      color: var(--text-900);
+    }
+    .qa-a .num,
+    .qa-a-text .num {
+      color: var(--accent);
+      font-weight: 900;
+      font-size: 1.08em;
+    }
+    /* 손글씨 강조 (Nanum Pen Script) */
+    .hw {
+      font-family: 'Nanum Pen Script', cursive;
+      font-size: 1.35em;
+      color: var(--accent);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1;
+      vertical-align: -1px;
+    }
+
+
+    .qa-image-placeholder {
+      margin-top: 14px;
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+    }
+    .qa-image {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto;
+    }
+    .image-fallback {
+      display: none;
+      padding: 28px 16px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFFAF2 100%);
+      border: 1.5px dashed #FFC9A0;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .image-fallback .image-placeholder-icon {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+    .placeholder-fallback .image-fallback {
+      display: block;
+    }
+    .image-placeholder-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .image-placeholder-text {
+      font-size: 12px;
+      color: var(--text-500);
+      line-height: 1.5;
+    }
+    .image-placeholder-text small {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    /* 한 달 기록 표 */
+    .record-table {
+      margin-top: 14px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
+      border-radius: 12px;
+    }
+    .record-table-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-700);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .record-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 13.5px;
+      color: var(--text-700);
+      font-weight: 600;
+      border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+    }
+    .record-row:last-child {
+      border-bottom: none;
+    }
+    .record-row.record-total {
+      margin-top: 4px;
+      padding-top: 12px;
+      border-top: 1.5px solid rgba(0, 0, 0, 0.15);
+      border-bottom: none;
+      font-weight: 800;
+      color: var(--text-900);
+      font-size: 14.5px;
+    }
+    .record-amount {
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .record-row.record-total .record-amount {
+      font-size: 17px;
+    }
+
+    /* 비결 박스 - 디자인 강화 */
+    .secret-box {
+      margin-top: 16px;
+      padding: 18px 18px 16px;
+      background: linear-gradient(135deg, #FFF4E0 0%, #FFE4C4 100%);
+      border-radius: 14px;
+      border: 1.5px solid #FFC9A0;
+    }
+    .secret-box-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .secret-tip-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .secret-tip-item {
+      display: grid;
+      grid-template-columns: 1fr 88px;
+      gap: 12px;
+      padding: 14px 14px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      align-items: center;
+    }
+    .secret-tip-content { min-width: 0; }
+    .secret-tip-image {
+      width: 88px;
+      height: 88px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFFAF2 100%);
+      border: 1.5px dashed #FFC9A0;
+      position: relative;
+    }
+    .secret-tip-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 10px;
+    }
+    .secret-tip-image .img-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px;
+      gap: 2px;
+    }
+    .secret-tip-image .img-fallback-icon {
+      font-size: 22px;
+    }
+    .secret-tip-image .img-fallback-text {
+      font-size: 10px;
+      color: var(--text-500);
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+    .secret-tip-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .secret-tip-desc {
+      font-size: 12.5px;
+      color: var(--text-500);
+      line-height: 1.55;
+      letter-spacing: -0.02em;
+    }
+    .secret-tip-desc .pt {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* 랭킹 리스트 (3번) */
+    .rank-list {
+      background: var(--card);
+      border-radius: var(--r-card);
+      padding: 10px 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+    }
+    .rank-item {
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px dashed #EEEAE4;
+    }
+    .rank-item:last-child {
+      border-bottom: none;
+    }
+    .rank-badge {
+      font-size: 28px;
+      text-align: center;
+      line-height: 1;
+    }
+    .rank-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-500);
+    }
+    .rank-info {
+      min-width: 0;
+    }
+    .rank-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+      margin-bottom: 2px;
+    }
+    .rank-store {
+      font-size: 12px;
+      color: var(--text-500);
+      letter-spacing: -0.02em;
+    }
+    .rank-amount {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .rank-gold, .rank-silver, .rank-bronze {
+      position: relative;
+    }
+    .rank-gold .rank-amount { font-size: 18px; }
+
+    /* 랭킹 CTA 강조 */
+    .rank-cta-card {
+      padding: 20px 22px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
+      border-radius: var(--r-card);
+      margin-bottom: 14px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+    }
+    .rank-cta-text {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-700);
+      letter-spacing: -0.02em;
+    }
+    .rank-cta-text strong {
+      color: var(--text-900);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    /* 인터뷰 끝나고 영수증 쿠폰 출력 유도 카드 (3번) */
+    .rank-result-card {
+      padding: 22px 22px;
+      background: linear-gradient(135deg, #FFF4E0 0%, #FFE4C4 100%);
+      border-radius: var(--r-card);
+      margin-bottom: 14px;
+      text-align: center;
+      border: 1.5px solid #FFC9A0;
+    }
+    .rank-result-text {
+      margin: 0 0 12px;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text-700);
+      letter-spacing: -0.02em;
+    }
+    .rank-result-text .pt-strong {
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .rank-result-cta {
+      margin: 0;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(0, 0, 0, 0.1);
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text-700);
+    }
+    .rank-result-cta strong {
+      color: var(--text-900);
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+
+    /* ============ 라이브 토스트 (글래스모피즘) ============ */
+    .live-toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 9990;
+      padding: 14px 22px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      font-size: 14px;
+      color: var(--text-900);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.4;
+      width: auto;
+      max-width: calc(100% - 40px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .live-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .live-toast .toast-amount {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    /* 보상 카드 우측 미니 아이콘 */
+    .reward-card {
+      position: relative;
+    }
+    .reward-mini {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      width: 56px;
+      height: 56px;
+    }
+
+    /* ============ FAQ ============ */
+    .faq-section {
+      margin-top: 26px;
+    }
+    .faq-list {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: 0 8px 20px rgba(255, 143, 0, 0.20);
+    }
+    .faq-list h2 {
+      margin: 0 0 18px 4px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+    }
+    details.faq {
+      background: var(--card);
+      border: 1px solid #E5E5E5;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    details.faq:last-child {
+      margin-bottom: 0;
+    }
+    details.faq summary {
+      cursor: pointer;
+      padding: 16px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-900);
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      letter-spacing: -0.02em;
+    }
+    details.faq summary::-webkit-details-marker { display: none; }
+    details.faq summary::after {
+      content: '';
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid var(--text-400);
+      border-bottom: 2px solid var(--text-400);
+      transform: rotate(45deg);
+      transition: transform 0.2s;
+      margin-top: -3px;
+      flex-shrink: 0;
+      margin-left: 14px;
+    }
+    details.faq[open] summary::after {
+      transform: rotate(-135deg);
+      margin-top: 2px;
+    }
+    details.faq .faq-body {
+      padding: 0 18px 16px;
+      font-size: 13.5px;
+      color: var(--text-500);
+      line-height: 1.7;
+    }
+
+    /* ============ 시급 2배 챌린지 자세히 알아보기 버튼 ============ */
+    .learn-more-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--accent);
+      border: none;
+      border-radius: 12px;
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 2px 6px rgba(255, 107, 0, 0.25);
+    }
+    .learn-more-btn:hover { background: #E55E00; }
+    .learn-more-btn:active { transform: scale(0.98); }
+
+    /* ============ 모바일 QR 카드 (PC 전용) ============ */
+    .mobile-qr-card {
+      background: #FFFFFF;
+      border: 1px solid #EAEAEA;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    .mobile-qr-card summary {
+      list-style: none;
+      padding: 14px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+    }
+    .mobile-qr-card summary::-webkit-details-marker { display: none; }
+    .mobile-qr-icon {
+      width: 22px;
+      height: 22px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .mobile-qr-title {
+      flex: 1;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+    }
+    .mobile-qr-arrow {
+      color: var(--accent);
+      font-size: 12px;
+      transition: transform 0.25s;
+    }
+    .mobile-qr-card[open] .mobile-qr-arrow {
+      transform: rotate(180deg);
+    }
+    .mobile-qr-body {
+      padding: 8px 18px 22px;
+      text-align: center;
+      border-top: 1px dashed #F0E0D0;
+    }
+    .mobile-qr-desc {
+      font-size: 13px;
+      color: var(--text-500);
+      line-height: 1.6;
+      margin: 14px 0 16px;
+    }
+    .qr-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 12px;
+      background: #FFFFFF;
+      border-radius: 10px;
+    }
+    .qr-wrap #qr-code {
+      display: inline-block;
+      padding: 12px;
+      background: #FFFFFF;
+      border: 1.5px solid #EAEAEA;
+      border-radius: 8px;
+    }
+    .qr-wrap #qr-code img {
+      display: block;
+    }
+
+    /* ============ 내 참여코드 찾기 ============ */
+    .find-code-btn {
+      width: 100%;
+      padding: 14px 16px;
+      background: #FFFFFF;
+      border: 2px dashed var(--accent);
+      border-radius: 12px;
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .find-code-btn:hover { background: #FFF6E8; }
+    .find-code-btn:active { transform: scale(0.98); }
+
+    .code-found {
+      text-align: center;
+      padding: 4px 0;
+    }
+    .code-found .code-label {
+      font-size: 12px;
+      color: var(--text-500);
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    .code-found .code-label #code-found-nickname {
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .code-found .code-val {
+      font-family: 'SF Mono', ui-monospace, 'Cascadia Mono', 'Roboto Mono', monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: 0.05em;
+      margin: 0 0 10px;
+      line-height: 1.1;
+    }
+    .research-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-500);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    /* ============ 검색 모달 ============ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.show {
+      display: flex;
+    }
+    .modal {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 24px 24px 0 0;
+      padding: 24px 22px 32px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.25s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--text-500);
+    }
+    .modal-desc {
+      font-size: 13.5px;
+      color: var(--text-500);
+      line-height: 1.6;
+      margin: 0 0 16px;
+    }
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      border: 1.5px solid #E5E5E5;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      color: var(--text-900);
+      background: #FAFAFA;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: #FFFFFF;
+    }
+    .search-input-wrap::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><line x1='20' y1='20' x2='16.65' y2='16.65'/></svg>");
+      background-repeat: no-repeat;
+      background-size: contain;
+      pointer-events: none;
+    }
+    .search-hint {
+      font-size: 12px;
+      color: var(--text-500);
+      margin: 0 0 12px 4px;
+    }
+    .search-results {
+      flex: 1;
+      overflow-y: auto;
+      margin: 0 -8px;
+      padding: 4px 8px;
+    }
+    .result-item {
+      padding: 14px 16px;
+      border: 1px solid #E5E5E5;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #FFFFFF;
+    }
+    .result-item:hover, .result-item:active {
+      border-color: var(--accent);
+      background: #FFF6E8;
+    }
+    .result-store {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-900);
+      margin: 0 0 4px;
+      letter-spacing: -0.02em;
+    }
+    .result-info {
+      font-size: 12.5px;
+      color: var(--text-500);
+      margin: 0;
+    }
+    .result-info .nickname {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .result-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-500);
+      font-size: 13.5px;
+    }
+    .result-empty .icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      opacity: 0.4;
+    }
+
+    /* ============ 카카오톡 채널 추가 카드 ============ */
+    .kakao-channel-card .card-badge,
+    .reminder-card .card-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      background: var(--accent-faded);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .kakao-channel-button-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 16px 12px;
+      margin-top: 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
+    }
+
+    /* ============ 근무시간 입력 카드 ============ */
+    .worktime-label {
+      display: block;
+      margin: 6px 0 8px;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--text-900);
+      letter-spacing: -0.02em;
+    }
+
+    .worktime-input {
+      width: 100%;
+      min-height: 92px;
+      padding: 14px 15px;
+      border: 1.5px solid #E5E5E5;
+      border-radius: 14px;
+      background: #FAFAFA;
+      color: var(--text-900);
+      font-family: inherit;
+      font-size: 14.5px;
+      line-height: 1.55;
+      letter-spacing: -0.02em;
+      resize: none;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .worktime-input:focus {
+      border-color: var(--accent);
+      background: #FFFFFF;
+    }
+
+    .worktime-input::placeholder {
+      color: var(--text-400);
+    }
+
+    .worktime-help {
+      margin: 8px 0 14px;
+      font-size: 12.5px;
+      color: var(--text-500);
+      line-height: 1.5;
+    }
+
+    .reminder-btn {
+      width: 100%;
+      padding: 15px 16px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.22);
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .reminder-btn:hover { background: #E55E00; }
+    .reminder-btn:active { transform: scale(0.98); }
+
+    .reminder-complete {
+      display: none;
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
+      color: var(--text-700);
+      font-size: 13.5px;
+      line-height: 1.55;
+      letter-spacing: -0.02em;
+    }
+
+    .reminder-complete.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- 상단 흰색 영역 -->
+    <div class="top-white">
+      <!-- 상단 네비 -->
+      <div class="topbar">
+        <button class="back" onclick="history.back()" aria-label="뒤로">
+          <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"/></svg>
+        </button>
+        <h1>시급 2배 챌린지</h1>
+      </div>
+
+      <!-- ============ 버전 1 헤더 (단계 설명) ============ -->
+      <div id="hero-block-1" class="hero-block">
+      <section class="hero-head">
+        <h2 class="hero-title">
+          <span class="accent">[시급 2배 챌린지]</span><br>
+          나만의 영수증 쿠폰을<br>뽑아주세요!
+        </h2>
+      </section>
+
+      <!-- 히어로 일러스트 (돈가방 + 동전들) -->
+      <div class="hero-illust" aria-hidden="true">
+      <svg viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bag-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#F0AC5A"/>
+            <stop offset="100%" stop-color="#D88735"/>
+          </linearGradient>
+          <linearGradient id="coin-grad-1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#FFD84D"/>
+            <stop offset="100%" stop-color="#FFB800"/>
+          </linearGradient>
+          <linearGradient id="coin-grad-2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#FF9D52"/>
+            <stop offset="100%" stop-color="#FF6B00"/>
+          </linearGradient>
+        </defs>
+
+        <!-- 그림자 -->
+        <ellipse cx="120" cy="200" rx="75" ry="8" fill="#000" opacity="0.10"/>
+
+        <!-- 돈가방 본체 -->
+        <path d="M62 88 Q62 76 76 76 L164 76 Q178 76 178 88 L186 184 Q186 200 168 200 L72 200 Q54 200 54 184 Z"
+              fill="url(#bag-grad)" stroke="#2A2A2A" stroke-width="2.8"/>
+        <!-- 가방 꼭지 -->
+        <rect x="92" y="62" width="56" height="18" rx="3" fill="#2A2A2A"/>
+        <path d="M98 76 L98 60 Q98 54 110 54 L130 54 Q142 54 142 60 L142 76"
+              fill="none" stroke="#2A2A2A" stroke-width="2.5" stroke-linejoin="round"/>
+
+        <!-- ₩ 큰 원 -->
+        <circle cx="120" cy="140" r="32" fill="url(#coin-grad-1)" stroke="#2A2A2A" stroke-width="2.8"/>
+        <text x="120" y="152" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="38" font-weight="900" fill="#2A2A2A">₩</text>
+
+        <!-- 떠다니는 동전들 -->
+        <circle cx="42" cy="68" r="18" fill="url(#coin-grad-1)" stroke="#2A2A2A" stroke-width="2.5"/>
+        <text x="42" y="76" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="18" font-weight="900" fill="#2A2A2A">₩</text>
+
+        <circle cx="200" cy="48" r="14" fill="url(#coin-grad-2)" stroke="#2A2A2A" stroke-width="2.5"/>
+        <text x="200" y="54" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="13" font-weight="900" fill="#FFFFFF">₩</text>
+
+        <circle cx="218" cy="92" r="11" fill="url(#coin-grad-1)" stroke="#2A2A2A" stroke-width="2.2"/>
+        <text x="218" y="97" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="10" font-weight="900" fill="#2A2A2A">₩</text>
+
+        <circle cx="22" cy="120" r="10" fill="url(#coin-grad-2)" stroke="#2A2A2A" stroke-width="2.2"/>
+        <text x="22" y="125" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="9" font-weight="900" fill="#FFFFFF">₩</text>
+
+        <!-- 반짝임 -->
+        <g fill="#FF6B00">
+          <circle cx="68" cy="40" r="3"/>
+          <circle cx="172" cy="32" r="3"/>
+          <circle cx="225" cy="140" r="2.5"/>
+          <circle cx="18" cy="170" r="2.5"/>
+          <circle cx="215" cy="180" r="2"/>
+        </g>
+
+        <!-- 떠오르는 효과선 -->
+        <path d="M30 30 L36 36 M30 36 L36 30" stroke="#FFB800" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M210 18 L216 24 M210 24 L216 18" stroke="#FFB800" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+      </div>
+      <!-- /버전 1 헤더 -->
+
+      
+
+    </div>
+    <!-- /상단 흰색 영역 -->
+
+    <!-- 본문 -->
+    <div class="content">
+
+            <!-- 절차 (등록 미완료 - 4단계) -->
+      <section class="outer-card" id="full-flow">
+        <div class="outer-card-head">
+          <h3 class="outer-card-title">나만의 영수증 쿠폰 출력 방법</h3>
+          <p class="outer-card-sub">1분도 안 걸려요! 미리 해두고, 손님이 물어보면 바로 전달드려요!</p>
+        </div>
+
+        <div class="inner-card">
+          <div class="step-body">
+            <div class="step-content">
+              <div class="step-header">
+                <span class="step-num">1</span>
+                <h4 class="step-title">점주용 프로그램 열기</h4>
+              </div>
+              <p class="step-desc">매장 패스오더 점주용 프로그램을 실행해 주세요</p>
+            </div>
+            <div class="step-mini-icon">
+              <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="6" width="28" height="20" rx="2" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="2"/>
+                <rect x="6" y="8" width="24" height="14" fill="#FFE9D6"/>
+                <rect x="13" y="28" width="10" height="2" fill="#2A2A2A"/>
+                <rect x="9" y="30" width="18" height="2" rx="1" fill="#2A2A2A"/>
+                <circle cx="13" cy="15" r="2" fill="#FF6B00"/>
+                <rect x="18" y="14" width="8" height="2" fill="#FF6B00"/>
+                <rect x="18" y="17" width="6" height="2" fill="#FF6B00" opacity="0.5"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="inner-card">
+          <div class="step-body">
+            <div class="step-content">
+              <div class="step-header">
+                <span class="step-num">2</span>
+                <h4 class="step-title">시급 2배 챌린지 탭 진입</h4>
+              </div>
+              <p class="step-desc">
+                <strong>[이벤트 관리]</strong> → <strong>[시급 2배 챌린지]</strong> 클릭
+              </p>
+            </div>
+            <div class="step-mini-icon">
+              <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="14" cy="14" r="9" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+                <circle cx="14" cy="14" r="3" fill="#FF6B00"/>
+                <path d="M22 22 L30 30" stroke="#2A2A2A" stroke-width="3" stroke-linecap="round"/>
+                <path d="M22 22 L26 22 M22 22 L22 26" stroke="#2A2A2A" stroke-width="2" stroke-linecap="round"/>
+                <path d="M14 4 L14 7" stroke="#FF6B00" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4 14 L7 14" stroke="#FF6B00" stroke-width="2" stroke-linecap="round"/>
+                <path d="M22 6 L20 8" stroke="#FF6B00" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="inner-card">
+          <div class="step-body">
+            <div class="step-content">
+              <div class="step-header">
+                <span class="step-num">3</span>
+                <h4 class="step-title">영수증 쿠폰 출력 후 전달</h4>
+              </div>
+              <p class="step-desc">'<span data-store>{매장명}</span>' 매장의 '<span data-nickname>{알바닉네임}</span>' 닉네임 칸에서 <strong>[출력]</strong> 버튼을 눌러서 영수증을 출력하고 방문하신 손님께 전달해 주세요</p>
+            </div>
+            <div class="step-mini-icon">
+              <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 6 L26 6 L26 30 L22 27 L18 30 L14 27 L10 30 L8 27 Z" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="2" stroke-linejoin="round"/>
+                <line x1="12" y1="12" x2="22" y2="12" stroke="#2A2A2A" stroke-width="1.5"/>
+                <line x1="12" y1="16" x2="22" y2="16" stroke="#2A2A2A" stroke-width="1.5"/>
+                <line x1="12" y1="20" x2="18" y2="20" stroke="#FF6B00" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+          <div class="tip-box">
+            <div class="tip-header">
+              <span class="tip-title">이런 상황에서 전달해봐요!</span>
+            </div>
+            <ol class="tip-list">
+              <li><span class="tip-num">①</span><span>매장 POS기에서 주문 받을 때 전달하기</span></li>
+              <li><span class="tip-num">②</span><span>음료 제작 후, 컵홀더에 영수증 쿠폰을 끼워서 전달하기</span></li>
+              <li><span class="tip-num">③</span><span>미리 영수증 쿠폰을 10~50매 가량 뽑아두고, 주문하는 공간 및 픽업 공간에 올려두기</span></li>
+            </ol>
+            <div class="tip-secret">
+              매장에 홍보 포스터를 붙이면, 손님들이 더 관심을 가질 거예요 🤫
+              <span class="tip-secret-link">[패스오더 점주용 프로그램 &gt; 이벤트 관리 &gt; 시급 2배 챌린지 탭 &gt; 포스터 이미지 다운로드] 방법으로 다운로드 가능</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+
+            <!-- ============ 카카오톡 채널 추가 카드 ============ -->
+      <section class="card kakao-channel-card">
+        <h3 class="card-title">활동 안내를 카카오톡으로 받아보세요</h3>
+        <p class="card-sub">
+          영수증 쿠폰 출력 방법, 리워드 안내, 리마인드 메시지를<br>
+          카카오톡으로 더 쉽게 확인할 수 있어요.
+        </p>
+        <div class="kakao-channel-button-wrap" id="kakao-channel-click-area">
+          <div
+            id="kakao-talk-channel-add-button"
+            data-channel-public-id="_XWxdxhX"
+            data-size="large"
+            data-support-multiple-densities="true"
+          ></div>
+        </div>
+      </section>
+
+      <!-- ============ 근무시간 입력 카드 ============ -->
+      <section class="card reminder-card">
+        <h3 class="card-title">근무시간에 맞춰 다시 알려드릴게요</h3>
+        <p class="card-sub">
+          지금 매장에서 바로 출력하기 어렵다면,<br>
+          근무 가능한 시간을 남겨주세요.
+        </p>
+        <textarea
+          id="worktime-input"
+          class="worktime-input"
+          rows="3"
+          placeholder="예: 오늘 18시 이후, 내일 오전 근무, 평일 오후 2~6시"
+        ></textarea>
+        <button type="button" class="reminder-btn" id="btn-reminder">
+          근무시간 입력하기
+        </button>
+        <div class="reminder-complete" id="reminder-complete">
+          남겨주신 근무시간을 확인했어요. 출력 가능한 타이밍에 맞춰 다시 안내드릴게요.
+        </div>
+      </section>
+
+      <!-- 보상 안내 카드 -->
+      <section class="card reward-card">
+        <svg class="reward-mini" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="28" cy="50" rx="20" ry="3" fill="#000" opacity="0.08"/>
+          <ellipse cx="28" cy="42" rx="20" ry="6" fill="#FFB800" stroke="#2A2A2A" stroke-width="2"/>
+          <rect x="8" y="34" width="40" height="10" fill="#FFB800"/>
+          <line x1="8" y1="34" x2="8" y2="44" stroke="#2A2A2A" stroke-width="2"/>
+          <line x1="48" y1="34" x2="48" y2="44" stroke="#2A2A2A" stroke-width="2"/>
+          <ellipse cx="28" cy="34" rx="20" ry="6" fill="#FFD84D" stroke="#2A2A2A" stroke-width="2"/>
+          <circle cx="28" cy="18" r="14" fill="#FFD84D" stroke="#2A2A2A" stroke-width="2"/>
+          <text x="28" y="24" text-anchor="middle" font-family="Pretendard, sans-serif" font-size="16" font-weight="900" fill="#2A2A2A">₩</text>
+        </svg>
+        <h3>시급 2배 챌린지란?</h3>
+        <p class="sub">모든 비용은 패스오더가 전액 부담해요</p>
+        <div class="reward-row">
+          <span class="reward-num">1</span>
+          <div class="reward-text">손님에게 영수증 쿠폰 전달하고</div>
+        </div>
+        <div class="reward-row">
+          <span class="reward-num">2</span>
+          <div class="reward-text">손님이 패스오더 첫 주문 완료 시</div>
+        </div>
+        <div class="reward-row">
+          <span class="reward-num">3</span>
+          <div class="reward-text"><span class="strong">손님 한 명당 1,500원</span> 현금 지급</div>
+        </div>
+        <a href="https://passorder.kr/Oa8B0jHM" target="_blank" rel="noopener" class="learn-more-btn" id="btn-learn-more">
+          <span>시급 2배 챌린지 더 자세히 알아보기</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
+      </section>
+
+      <!-- FAQ -->
+      <section class="faq-section">
+        <div class="faq-list">
+          <h2>자주 묻는 질문</h2>
+          <details class="faq">
+          <summary>리워드가 어떻게 지급되나요?</summary>
+          <div class="faq-body">
+            고객이 영수증 쿠폰을 통해 패스오더 앱으로 첫 주문을 하면 1건으로 인정되어 1,500원이 지급됩니다.
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>리워드가 어떤 형식으로 지급되나요?</summary>
+          <div class="faq-body">
+            패스오더 앱 내에 리워드가 지급됩니다. 이후 실제 현금으로 출금하실 수 있습니다.
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>출금은 어떻게 하나요?</summary>
+          <div class="faq-body">
+            패스오더 앱을 회원가입 한 뒤, 패스오더 앱 내에서 패스지갑에 본인 명의 계좌를 등록하면 출금 가능합니다.
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>손님한테 쿠폰을 어떻게 전달드려요?</summary>
+          <div class="faq-body">
+            음료를 건네줄 때, 매장에서 진행 중인 이벤트임을 알리면서 쿠폰을 같이 전달해주시면 됩니다.<br><br>
+            안내가 어려운 경우에는 손님이 픽업하는 음료 컵홀더에 끼워 넣어 전달하는 방법도 있기에, 부담 갖지 말고 참여해 보세요!
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>영수증 쿠폰은 어떻게 발급받나요?</summary>
+          <div class="faq-body">
+            [POS 내 패스오더 점주용 프로그램]에서 발급받으실 수 있어요.<br>
+            [이벤트 관리 → 시급 2배 챌린지 → 코드 등록 → 영수증 출력] 절차이며, 간단하게 발급할 수 있어요.
+          </div>
+        </details>
+
+        <details class="faq" id="faq-code-error" style="display:none;">
+          <summary>참여 코드 등록이 안 돼요</summary>
+          <div class="faq-body">
+            참여 코드는 알바님 본인 신청 시 발급된 고유 코드입니다. 위 코드 박스의 코드를 정확히 입력했는지 확인해 주세요. 그래도 오류가 뜬다면, 패스오더 알바지원팀에 문의해 주세요.
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>점주용 프로그램이 매장에 없어요</summary>
+          <div class="faq-body">
+            사장님께 점주용 프로그램 설치를 요청드리거나, 패스오더 알바지원팀에 문의해 주세요.
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>영수증 출력이 안 돼요</summary>
+          <div class="faq-body">
+            매장의 영수증 프린터 연결 상태를 확인하고, 점주용 프로그램을 재시작해 보세요. 그래도 오류가 뜬다면, 패스오더 알바지원팀에 문의해 주세요.
+          </div>
+        </details>
+        </div></section>
+
+      
+
+      
+
+    </div>
+
+  </div>
+
+  <!-- ============ 페이지 초기화 + URL 파라미터 처리 ============ -->
+  <script>
+    (function() {
+      // ─── URL 파라미터 파싱 ───
+      const urlParams = new URLSearchParams(window.location.search);
+      const STORE = urlParams.get('store') || urlParams.get('s') || '매장명';
+      const NICKNAME = urlParams.get('nickname') || urlParams.get('n') || '닉네임';
+      const CHANNEL = urlParams.get('channel') || 'direct';
+
+      // 전역 노출 (다른 스크립트에서 사용)
+      window.__STORE__ = STORE;
+      window.__NICKNAME__ = NICKNAME;
+      window.__CHANNEL__ = CHANNEL;
+
+      // ─── 변수 자동 채우기 ───
+      document.querySelectorAll('[data-store]').forEach(function(el) {
+        el.textContent = STORE;
+      });
+      document.querySelectorAll('[data-nickname]').forEach(function(el) {
+        el.textContent = NICKNAME;
+      });
+
+    })();
+  </script>
+
+  <!-- 토스트 컨테이너 -->
+  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- 라이브 토스트 (1번 버전 전용) -->
+  <div class="live-toast" id="live-toast" aria-hidden="true">
+    <span id="live-toast-text"></span>
+  </div>
+
+  
+
+
+  <!-- ============ 라이브 토스트 (1번/2번 공통) ============ -->
+  <script>
+    (function() {
+      // 더미 데이터 (staff-data.js 못 로드된 미리보기 환경 fallback)
+      const DUMMY_DATA = [
+        { n: '민호', s: '컴포즈커피 강남역점', g: '미등록' },
+        { n: '지은', s: '메가커피 홍대점', g: '활동중' },
+        { n: '서연', s: '이디야커피 잠실점', g: '활동중' },
+        { n: '도윤', s: '빽다방 신촌점', g: '미시작' },
+        { n: '하준', s: '텐퍼센트커피 종로점', g: '활동중' },
+        { n: '예준', s: '메가커피 부산서면점', g: '활동중' },
+        { n: '시우', s: '컴포즈커피 분당정자점', g: '미등록' },
+        { n: '주원', s: '커피빈 명동점', g: '활동중' },
+        { n: '서윤', s: '투썸플레이스 광화문점', g: '미시작' },
+        { n: '윤서', s: '이디야커피 인천구월점', g: '활동중' },
+      ];
+
+      const RAW_STAFF_DATA = (window.STAFF_DATA && window.STAFF_DATA.length > 0)
+        ? window.STAFF_DATA
+        : DUMMY_DATA;
+
+      // 활동중만 토스트 노출
+      const FILTERED_STAFF_DATA = RAW_STAFF_DATA.filter(function(item) {
+        return item.g === '활동중';
+      });
+
+      // 활동중 데이터가 있으면 활동중만 사용,
+      // 없으면 원본 데이터로 fallback해서 토스트는 계속 반복
+      const STAFF_DATA = FILTERED_STAFF_DATA.length > 0
+        ? FILTERED_STAFF_DATA
+        : RAW_STAFF_DATA;
+
+      const toast = document.getElementById('live-toast');
+      const textEl = document.getElementById('live-toast-text');
+      if (!toast || !textEl) return;
+
+      // ─── 매장명 마스킹: "컴포즈커피 광화문시대점" → "컴포즈커피 **매장" ───
+      function maskStore(storeName) {
+        if (!storeName) return '** 매장';
+        const trimmed = String(storeName).trim();
+        const parts = trimmed.split(/\s+/);
+        return parts[0] + ' **매장';
+      }
+
+      // ─── 닉네임 마스킹: "이민호" → "이*호" ───
+      function maskNickname(nick) {
+        if (!nick) return '***';
+        const n = String(nick).trim();
+        const chars = Array.from(n); // 한글/이모지 안전 처리
+        const len = chars.length;
+        if (len <= 1) return chars[0] + '*';
+        if (len === 2) return chars[0] + '*';
+        if (len === 3) return chars[0] + '*' + chars[2];
+        return chars[0] + '**' + chars[len - 1];
+      }
+
+      // ─── 1,500원 단위 랜덤 금액 (1,500 ~ 7,500) ───
+      function randomAmount() {
+        const multiplier = Math.floor(Math.random() * 5) + 1;
+        return multiplier * 1500;
+      }
+
+      function formatNumber(n) {
+        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      }
+
+      let lastIdx = -1;
+      function showNext() {
+        let idx;
+        if (STAFF_DATA.length === 1) {
+          idx = 0;
+        } else {
+          do {
+            idx = Math.floor(Math.random() * STAFF_DATA.length);
+          } while (idx === lastIdx);
+        }
+        lastIdx = idx;
+
+        const staff = STAFF_DATA[idx];
+        const amount = randomAmount();
+
+        textEl.innerHTML =
+          '[' + maskStore(staff.s) + ' ' +
+          maskNickname(staff.n) + ' 알바 ' +
+          '<span class="toast-amount">' + formatNumber(amount) + '원</span>' +
+          ' 시급 추가]';
+
+        toast.classList.add('show');
+
+        setTimeout(function() {
+          toast.classList.remove('show');
+        }, 4000);
+      }
+
+      // 다음 표시 예약 - 매번 랜덤 간격 (5~8초)
+      function scheduleNext() {
+        const delay = 5000 + Math.floor(Math.random() * 3000); // 5000ms ~ 8000ms
+        setTimeout(function() {
+          showNext();
+          scheduleNext();
+        }, delay);
+      }
+
+      // 첫 표시는 1.5초 후
+      setTimeout(function() {
+        showNext();
+        scheduleNext();
+      }, 1500);
+    })();
+  </script>
+
+
+  <!-- ============ 트래킹 + 이벤트 핸들러 ============ -->
+  <script>
+    (function() {
+      // Apps Script Webhook
+      const TRACKING_URL = 'https://script.google.com/macros/s/AKfycbyDdL0feWNKp430v7Og4rYj83VVnhnkZlqsUaJ3RcGahr6JeDvdtSbylxkS9QIQlKh1rw/exec';
+
+      // 페이지 전역 변수
+      const STORE = window.__STORE__ || '';
+      const NICKNAME = window.__NICKNAME__ || '';
+      const CHANNEL = window.__CHANNEL__ || 'direct';
+
+      // 세션/사용자 ID
+      const sessionId = 'S_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+      let userId = '';
+      try {
+        userId = localStorage.getItem('po_user_id');
+        if (!userId) {
+          userId = 'U_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+          localStorage.setItem('po_user_id', userId);
+        }
+      } catch (e) {
+        userId = 'U_temp_' + Math.random().toString(36).substr(2, 8);
+      }
+
+      // ─── 트래킹 함수 ───
+      window.trackEvent = function(eventName, data) {
+        if (!TRACKING_URL || TRACKING_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+          console.log('[track]', eventName, data || {});
+          return;
+        }
+        try {
+          const payload = Object.assign({
+            event: eventName,
+            channel: CHANNEL,
+            storeName: STORE,
+            nickname: NICKNAME,
+            sessionId: sessionId,
+            userId: userId,
+            pageUrl: location.href,
+            referrer: document.referrer || '',
+            userAgent: navigator.userAgent || '',
+            timestamp: new Date().toISOString()
+          }, data || {});
+
+          const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain;charset=utf-8' });
+          let sent = false;
+          if (navigator.sendBeacon) {
+            sent = navigator.sendBeacon(TRACKING_URL, blob);
+          }
+          if (!sent) {
+            fetch(TRACKING_URL, {
+              method: 'POST',
+              mode: 'no-cors',
+              body: JSON.stringify(payload),
+              keepalive: true
+            }).catch(function() {});
+          }
+        } catch (e) { /* silent */ }
+      };
+
+      // ─── 페이지 진입 이벤트 ───
+      trackEvent('PAGE_VIEW');
+
+      // ─── 자세히 알아보기 클릭 ───
+      const btnLearnMore = document.getElementById('btn-learn-more');
+      if (btnLearnMore) {
+        btnLearnMore.addEventListener('click', function() {
+          trackEvent('LEARN_MORE_CLICK');
+        });
+      }
+
+      // ─── 카카오톡 채널 추가 + 근무시간 입력 이벤트 ───
+      const kakaoClickArea = document.getElementById('kakao-channel-click-area');
+      const worktimeInput = document.getElementById('worktime-input');
+      const reminderButton = document.getElementById('btn-reminder');
+      const reminderComplete = document.getElementById('reminder-complete');
+
+      let worktimeChangeTimer = null;
+      let hasFocusedWorktime = false;
+
+      function getWorktimeValue() {
+        return worktimeInput ? worktimeInput.value.trim() : '';
+      }
+
+      // 카카오톡 채널 추가 영역 클릭
+      if (kakaoClickArea) {
+        kakaoClickArea.addEventListener('click', function() {
+          trackEvent('KAKAO_CHANNEL_ADD_CLICK', {
+            worktimeText: getWorktimeValue()
+          });
+        });
+      }
+
+      // 근무시간 입력 - 첫 포커스
+      if (worktimeInput) {
+        worktimeInput.addEventListener('focus', function() {
+          if (hasFocusedWorktime) return;
+          hasFocusedWorktime = true;
+          trackEvent('WORK_TIME_INPUT_FOCUS', {
+            worktimeText: getWorktimeValue()
+          });
+        });
+
+        // 입력 중 자동 저장 (debounce 700ms)
+        worktimeInput.addEventListener('input', function() {
+          clearTimeout(worktimeChangeTimer);
+          worktimeChangeTimer = setTimeout(function() {
+            trackEvent('WORK_TIME_INPUT_CHANGE', {
+              worktimeText: getWorktimeValue()
+            });
+          }, 700);
+        });
+
+        // 입력창 밖으로 나갔을 때
+        worktimeInput.addEventListener('blur', function() {
+          trackEvent('WORK_TIME_INPUT_BLUR', {
+            worktimeText: getWorktimeValue()
+          });
+        });
+      }
+
+      // 알림 받기 버튼 클릭
+      if (reminderButton) {
+        reminderButton.addEventListener('click', function() {
+          const worktimeText = getWorktimeValue();
+          trackEvent('REMINDER_REQUEST_CLICK', {
+            worktimeText: worktimeText
+          });
+          if (reminderComplete) {
+            reminderComplete.classList.add('show');
+          }
+        });
+      }
+    })();
+  </script>
+
+  <!-- ============ 카카오톡 채널 SDK ============ -->
+  <script>
+    window.kakaoAsyncInit = function() {
+      Kakao.Channel.createAddChannelButton({
+        container: '#kakao-talk-channel-add-button',
+      });
+    };
+
+    (function(d, s, id) {
+      var js;
+      var fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.channel.min.js';
+      js.integrity = 'sha384-8oNFBbAHWVovcMLgR+mLbxqwoucixezSAzniBcjnEoumhfIbMIg4DrVsoiPEtlnt';
+      js.crossOrigin = 'anonymous';
+      fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'kakao-js-sdk');
+  </script>
+
+</body>
+</html>
