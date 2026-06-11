@@ -183,6 +183,10 @@
       font-weight: 400;
       line-height: 1.55;
     }
+    .card-sub strong {
+      color: var(--accent);
+      font-weight: 800;
+    }
 
     /* ============ 부재 알바 안내 카드 (펼치기 형식) ============ */
     .notice-card {
@@ -1667,6 +1671,15 @@
     }
 
     /* ============ 근무시간 입력 카드 ============ */
+    /* 카드 내부 요소들 사이 간격 확보 */
+    .reminder-card .card-title {
+      margin-bottom: 8px;
+    }
+    .reminder-card .card-sub {
+      margin-bottom: 20px;
+      line-height: 1.65;
+    }
+
     .worktime-label {
       display: block;
       margin: 6px 0 8px;
@@ -1678,19 +1691,20 @@
 
     .worktime-input {
       width: 100%;
-      min-height: 92px;
-      padding: 14px 15px;
+      min-height: 100px;
+      padding: 16px;
       border: 1.5px solid #E5E5E5;
       border-radius: 14px;
       background: #FAFAFA;
       color: var(--text-900);
       font-family: inherit;
       font-size: 14.5px;
-      line-height: 1.55;
+      line-height: 1.6;
       letter-spacing: -0.02em;
       resize: none;
       outline: none;
       transition: border-color 0.15s, background 0.15s;
+      margin-bottom: 20px;
     }
 
     .worktime-input:focus {
@@ -1700,6 +1714,7 @@
 
     .worktime-input::placeholder {
       color: var(--text-400);
+      line-height: 1.6;
     }
 
     .worktime-help {
@@ -1711,7 +1726,7 @@
 
     .reminder-btn {
       width: 100%;
-      padding: 15px 16px;
+      padding: 16px 16px;
       border: none;
       border-radius: 12px;
       background: var(--accent);
@@ -1730,7 +1745,7 @@
 
     .reminder-complete {
       display: none;
-      margin-top: 12px;
+      margin-top: 14px;
       padding: 14px 16px;
       border-radius: 12px;
       background: linear-gradient(135deg, #FFF8E0 0%, #FFEDB8 100%);
@@ -1930,10 +1945,10 @@
 
             <!-- ============ 카카오톡 채널 추가 카드 ============ -->
       <section class="card kakao-channel-card">
-        <h3 class="card-title">활동 안내를 카카오톡으로 받아보세요</h3>
+        <h3 class="card-title">패스오더 채널 꼭 추가해주세요!</h3>
         <p class="card-sub">
-          영수증 쿠폰 출력 방법, 리워드 안내, 리마인드 메시지를<br>
-          카카오톡으로 더 쉽게 확인할 수 있어요.
+          영수증 쿠폰 출력 방법, 리워드 안내, 리마인드 메시지는<br>
+          <strong>카카오톡 채널을 추가하셔야 받을 수 있어요</strong>.
         </p>
         <div class="kakao-channel-button-wrap" id="kakao-channel-click-area">
           <div
@@ -2246,7 +2261,7 @@
       // ─── 트래킹 함수 ───
       window.trackEvent = function(eventName, data) {
         if (!TRACKING_URL || TRACKING_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-          console.log('[track]', eventName, data || {});
+          console.log('[track] URL 미설정', eventName, data || {});
           return;
         }
         try {
@@ -2263,10 +2278,13 @@
             timestamp: new Date().toISOString()
           }, data || {});
 
+          console.log('[track 발송]', eventName, payload);
+
           const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain;charset=utf-8' });
           let sent = false;
           if (navigator.sendBeacon) {
             sent = navigator.sendBeacon(TRACKING_URL, blob);
+            console.log('[track sendBeacon 결과]', sent);
           }
           if (!sent) {
             fetch(TRACKING_URL, {
@@ -2274,9 +2292,13 @@
               mode: 'no-cors',
               body: JSON.stringify(payload),
               keepalive: true
-            }).catch(function() {});
+            })
+            .then(function(r) { console.log('[track fetch 응답]', r.status); })
+            .catch(function(err) { console.error('[track fetch 실패]', err); });
           }
-        } catch (e) { /* silent */ }
+        } catch (e) {
+          console.error('[track 에러]', e);
+        }
       };
 
       // ─── 페이지 진입 이벤트 ───
